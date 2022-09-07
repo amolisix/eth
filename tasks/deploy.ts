@@ -256,6 +256,7 @@ export async function deployAndCut(
   const whitelistFacet = await deployWhitelistFacet({}, libraries, hre);
   const adminFacet = await deployAdminFacet({}, libraries, hre);
   const lobbyFacet = await deployLobbyFacet({}, {}, hre);
+  const universeManageFacet = await deployUniverseManageFacet({}, libraries, hre);
 
   // The `cuts` to perform for Dark Forest facets
   const darkForestFacetCuts = [
@@ -267,6 +268,7 @@ export async function deployAndCut(
     ...changes.getFacetCuts('DFWhitelistFacet', whitelistFacet),
     ...changes.getFacetCuts('DFAdminFacet', adminFacet),
     ...changes.getFacetCuts('DFLobbyFacet', lobbyFacet),
+    ...changes.getFacetCuts('DFUniverseManageFacet', universeManageFacet),
   ];
 
   const toCut = [...diamondSpecFacetCuts, ...darkForestFacetCuts];
@@ -504,5 +506,20 @@ export async function deployLobbyFacet({}, {}: Libraries, hre: HardhatRuntimeEnv
   const contract = await factory.deploy();
   await contract.deployTransaction.wait();
   console.log(`DFLobbyFacet deployed to: ${contract.address}`);
+  return contract;
+}
+
+export async function deployUniverseManageFacet(
+  {},
+  {}: Libraries,
+  hre: HardhatRuntimeEnvironment
+) {
+  const factory = await hre.ethers.getContractFactory('DFUniverseManageFacet', {
+    libraries: {
+    },
+  });
+  const contract = await factory.deploy();
+  await contract.deployTransaction.wait();
+  console.log(`DFUniverseManageFacet deployed to: ${contract.address}`);
   return contract;
 }
